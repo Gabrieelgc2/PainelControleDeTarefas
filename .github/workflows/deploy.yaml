@@ -1,0 +1,44 @@
+name: Deploy do Dashboard
+
+on:
+  # Roda o deploy toda vez que houver um push na branch main
+  push:
+    branches: ["main"]
+
+  # Permite rodar manualmente na aba "Actions" se precisar
+  workflow_dispatch:
+
+# Permissões necessárias para o GITHUB_TOKEN escrever nas Pages
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# Garante que apenas um deploy aconteça por vez
+concurrency:
+  group: "pages"
+  cancel-in-progress: false
+
+jobs:
+  # Job único de deploy
+  deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout do código
+        uses: actions/checkout@v4
+
+      - name: Configurar GitHub Pages
+        uses: actions/configure-pages@v5
+
+      - name: Upload dos arquivos (Artifact)
+        uses: actions/upload-pages-artifact@v3
+        with:
+          # O ponto '.' indica que o index.html está na raiz do repositório
+          path: '.'
+
+      - name: Deploy para GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
