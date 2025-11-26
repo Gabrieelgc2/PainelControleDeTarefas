@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard de Controle de Tarefas</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    
+    <style>
+        body { background-color: #f4f6f9; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        .card { border: none; border-radius: 12px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); margin-bottom: 20px; }
+        .header-title { color: #2c3e50; font-weight: 700; }
+        .status-concluido { background-color: #d1e7dd; color: #0f5132; }
+        .status-andamento { background-color: #fff3cd; color: #664d03; }
+        .status-pendente { background-color: #f8d7da; color: #842029; }
+        .badge-cat { font-size: 0.85em; font-weight: 500; }
+        .table-hover tbody tr:hover { background-color: #f1f1f1; }
+    </style>
+</head>
+<body>
+
+<div class="container py-4">
+    <div class="row mb-4 align-items-center">
+        <div class="col-md-8">
+            <h2 class="header-title"><i class="fas fa-tasks text-primary me-2"></i>Painel de Controle de Tarefas</h2>
+            <p class="text-muted">Gerenciamento diário e semanal de atividades</p>
+        </div>
+        <div class="col-md-4 text-end">
+            <button class="btn btn-primary" onclick="window.print()"><i class="fas fa-print"></i> Imprimir Relatório</button>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-4">
+            <div class="card p-3">
+                <h5 class="card-title text-center mb-3">Status Geral</h5>
+                <canvas id="statusChart"></canvas>
+            </div>
+        </div>
+        <div class="col-md-8">
+            <div class="card p-3">
+                <h5 class="card-title text-center mb-3">Tarefas por Categoria</h5>
+                <canvas id="categoryChart"></canvas>
+            </div>
+        </div>
+    </div>
+
+    <div class="card p-4 mt-2">
+        <h4 class="mb-3">Lista Detalhada</h4>
+        <div class="table-responsive">
+            <table class="table table-hover align-middle" id="taskTable">
+                <thead class="table-dark">
+                    <tr>
+                        <th>Categoria</th>
+                        <th>Tarefa / Item</th>
+                        <th>Data de início</th>
+                        <th>Horário</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<script>
+    // --- 1. DADOS (Baseado na sua lista) ---
+    // Simulando datas para preenchimento visual
+    const today = new Date().toLocaleDateString('pt-BR');
+    const impressoras = new Date("November 13, 2025").toLocaleDateString('pt-BR');
+    const informaticaOrganizar = new Date("November 13, 2025").toLocaleDateString('pt-BR');
+    const almoxarifado = new Date("November 14, 2025").toLocaleDateString('pt-BR');
+    const comunicacao = new Date("November 12, 2025").toLocaleDateString('pt-BR');
+    
+    const tasks = [
+        // CATEGORIA PROATIVIDADE
+        { cat: 'Proatividade', item: 'Implementação do VSCODE', date: almoxarifado, time: '08:00', status: 'Concluido' },
+        { cat: 'Proatividade', item: 'Implementação do GIT', date: almoxarifado, time: '08:00', status: 'Concluido' },
+        { cat: 'Proatividade', item: 'Uso de Python (Análise)', date: almoxarifado, time: '08:00', status: 'Concluido' },
+        { cat: 'Proatividade', item: 'Verificar Wi-Fi Impressoras', date: impressoras, time: '-', status: 'Concluido' },
+        // Impressoras Financeiro
+        { cat: 'Proatividade', item: 'Imp. Financeiro: Gilson', date: impressoras, time: '08:00', status: 'Concluido' },
+        { cat: 'Proatividade', item: 'Imp. Financeiro: Givanildo', date: impressoras, time: '08:00', status: 'Concluido' },
+        { cat: 'Proatividade', item: 'Imp. Financeiro: Francisca', date: impressoras, time: '08:00', status: 'Concluido' },
+        { cat: 'Proatividade', item: 'Imp. Financeiro: Walter', date: impressoras, time: '08:00', status: 'Concluido' },
+        { cat: 'Proatividade', item: 'Imp. Financeiro: Estagiário', date: impressoras, time: '08:00', status: 'Concluido' },
+        // Impressoras RH
+        { cat: 'Proatividade', item: 'Imp. RH: Paulo', date: impressoras, time: '08:00', status: 'Concluido' },
+        { cat: 'Proatividade', item: 'Imp. RH: Sofia', date: impressoras, time: '08:00', status: 'Concluido' },
+        { cat: 'Proatividade', item: 'Imp. RH: Larissa', date: impressoras, time: '08:00', status: 'Concluido' },
+        { cat: 'Proatividade', item: 'Imp. RH: Sterffany', date: impressoras, time: '08:00', status: 'Concluido' },
+        // Impressoras Pós
+        { cat: 'Proatividade', item: 'Imp. Pós: Dani', date: impressoras, time: '08:00', status: 'Concluido' },
+        { cat: 'Proatividade', item: 'Imp. Pós: Brenda', date: impressoras, time: '08:00', status: 'Concluido' },
+        { cat: 'Proatividade', item: 'Imp. Pós: Edmar', date: impressoras, time: '08:00', status: 'Concluido' },
+        { cat: 'Proatividade', item: 'Imp. Pós: Karla', date: impressoras, time: '08:00', status: 'Concluido' },
+        { cat: 'Proatividade', item: 'Imp. Pós: Estagiário', date: impressoras, time: '08:00', status: 'Concluido' },
+        // Outros Proatividade
+        { cat: 'Proatividade', item: 'Verif. Impressoras ADM', date: impressoras, time: '08:00', status: 'Concluido' },
+        { cat: 'Proatividade', item: 'Verif. Impressoras Escolaridade', date: impressoras, time: '08:00', status: 'Concluido' },
+        { cat: 'Proatividade', item: 'Script bat para Windows', date: impressoras, time: '08:00', status: 'Em andamento' },
+        { cat: 'Proatividade', item: 'Teste componentes (Fonte 1 e 2)', date: impressoras, time: '08:00', status: 'Concluido' },
+
+        // CATEGORIA ORGANIZAÇÃO
+        { cat: 'Organização', item: '1.1 Arrumação bancada informática', date: informaticaOrganizar, time: '08:30', status: 'Concluido' },
+        { cat: 'Organização', item: '1.2 Organizar caixas/equipamentos', date: informaticaOrganizar, time: '08:00', status: 'Concluido' },
+        { cat: 'Organização', item: '1.3 Limpar a bancada', date: informaticaOrganizar, time: '08:00', status: 'Concluido' },
+        { cat: 'Organização', item: '1.4 Arrumar o armário', date: '-', time: '-', status: 'Pendente' },
+        { cat: 'Organização', item: '1.5 Arrumação bancada Gabriel', date: informaticaOrganizar, time: '08:00', status: 'Concluido' },
+
+        // CATEGORIA COMUNICAÇÃO
+        { cat: 'Comunicação', item: 'Melhora da comunicação com equipe', date: comunicacao, time: '-', status: 'Em andamento' },
+    ];
+
+    // --- 2. LÓGICA DE RENDERIZAÇÃO DA TABELA ---
+    const tbody = document.querySelector('#taskTable tbody');
+
+    tasks.forEach(task => {
+        let badgeClass = '';
+        let statusIcon = '';
+
+        if(task.status === 'Concluido') {
+            badgeClass = 'status-concluido';
+            statusIcon = '<i class="fas fa-check-circle me-1"></i>';
+        } else if (task.status === 'Em andamento') {
+            badgeClass = 'status-andamento';
+            statusIcon = '<i class="fas fa-spinner fa-spin me-1"></i>';
+        } else {
+            badgeClass = 'status-pendente';
+            statusIcon = '<i class="fas fa-exclamation-circle me-1"></i>';
+        }
+
+        const catColor = task.cat === 'Proatividade' ? 'primary' : (task.cat === 'Organização' ? 'info' : 'success');
+
+        const row = `
+            <tr>
+                <td><span class="badge bg-${catColor} badge-cat">${task.cat}</span></td>
+                <td>${task.item}</td>
+                <td>${task.date}</td>
+                <td>${task.time}</td>
+                <td><span class="badge ${badgeClass} p-2">${statusIcon} ${task.status}</span></td>
+            </tr>
+        `;
+        tbody.innerHTML += row;
+    });
+
+    // --- 3. LÓGICA DOS GRÁFICOS (CHART.JS) ---
+    
+    // Contagem de Status
+    const statusCounts = { Concluido: 0, EmAndamento: 0, Pendente: 0 };
+    tasks.forEach(t => {
+        if(t.status === 'Concluido') statusCounts.Concluido++;
+        else if(t.status === 'Em andamento') statusCounts.EmAndamento++;
+        else statusCounts.Pendente++;
+    });
+
+    // Gráfico de Rosca (Status)
+    new Chart(document.getElementById('statusChart'), {
+        type: 'doughnut',
+        data: {
+            labels: ['Concluído', 'Em Andamento', 'Pendente'],
+            datasets: [{
+                data: [statusCounts.Concluido, statusCounts.EmAndamento, statusCounts.Pendente],
+                backgroundColor: ['#198754', '#ffc107', '#dc3545'],
+                borderWidth: 0
+            }]
+        },
+        options: { plugins: { legend: { position: 'bottom' } } }
+    });
+
+    // Contagem por Categoria
+    const catCounts = { Proatividade: 0, Organizacao: 0, Comunicacao: 0 };
+    tasks.forEach(t => {
+        if(t.cat === 'Proatividade' && t.status === 'Concluido') catCounts.Proatividade++;
+        if(t.cat === 'Organização' && t.status === 'Concluido') catCounts.Organizacao++;
+        if(t.cat === 'Comunicação' && t.status === 'Concluido') catCounts.Comunicacao++;
+    });
+
+    // Gráfico de Barras (Produtividade por Categoria)
+    new Chart(document.getElementById('categoryChart'), {
+        type: 'bar',
+        data: {
+            labels: ['Proatividade', 'Organização', 'Comunicação'],
+            datasets: [{
+                label: 'Tarefas Concluídas',
+                data: [catCounts.Proatividade, catCounts.Organizacao, catCounts.Comunicacao],
+                backgroundColor: ['#0d6efd', '#0dcaf0', '#198754'],
+                borderRadius: 5
+            }]
+        },
+        options: {
+            scales: { y: { beginAtZero: true } },
+            plugins: { legend: { display: false } }
+        }
+    });
+
+</script>
+
+</body>
+</html>
