@@ -24,7 +24,8 @@
     <div class="row mb-4 align-items-center">
         <div class="col-md-8">
             <h2 class="header-title"><i class="fas fa-tasks text-primary me-2"></i>Painel de Controle de Tarefas</h2>
-            <p class="text-muted">Gerenciamento diário e semanal de atividades</p>
+            <p class="text-muted">Um relatório completo de atividades a partir do mês de Novembro a Dezembro</p>
+            <p style="color: 	#4B0082;">Obs: No final de Novembro até de Dezembro, foi realizado um estudo nos conteúdos de Infraestrutura de redes e comunicação de modo a identificar as causas que vem ocorrendo repentinamente na queda da Internet da FOP. Além disso foi analisado a estrutura dos Racks 01, 02 e 04 (Patch pannels e Switchs) para entender como a Internet se distribuí pela instituição e dessa forma aplicar os conhecimentos aprendidos de forma eficaz.</p>
         </div>
         <div class="col-md-4 text-end">
             <button class="btn btn-primary" onclick="window.print()"><i class="fas fa-print"></i> Imprimir Relatório</button>
@@ -54,7 +55,6 @@
                     <tr>
                         <th>Categoria</th>
                         <th>Tarefa / Item</th>
-                        <th>Data de início</th>
                         <th>Horário</th>
                         <th>Status</th>
                     </tr>
@@ -70,45 +70,34 @@
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
 <script>
-    // --- 1. DADOS (Baseado na sua lista) ---
-    // Simulando datas para preenchimento visual
-    const today = new Date().toLocaleDateString('pt-BR');
-    const impressoras = new Date("November 13, 2025").toLocaleDateString('pt-BR');
-    const informaticaOrganizar = new Date("November 13, 2025").toLocaleDateString('pt-BR');
-    const almoxarifado = new Date("November 14, 2025").toLocaleDateString('pt-BR');
-    const comunicacao = new Date("November 12, 2025").toLocaleDateString('pt-BR');
-    const rack02 = new Date("December 20, 2025").toLocaleDateString('pt-BR');
     
     const tasks = [
         // CATEGORIA PROATIVIDADE
-        { cat: 'Proatividade', item: 'Implementação do VSCODE', date: almoxarifado, time: '08:00', status: 'Concluido' },
-        { cat: 'Proatividade', item: 'Implementação do GIT', date: almoxarifado, time: '08:00', status: 'Concluido' },
-        { cat: 'Proatividade', item: 'Uso de Python (Análise)', date: almoxarifado, time: '08:00', status: 'Concluido' },
-        { cat: 'Proatividade', item: 'Verificar Wi-Fi Impressoras', date: impressoras, time: '-', status: 'Concluido' },
+        { cat: 'Proatividade', item: 'Verificar Wi-Fi Impressoras', time: '08:00', status: 'Concluido' },
         // Impressoras Financeiro
-        { cat: 'Proatividade', item: 'Imp. Financeiro: Gilson', date: impressoras, time: '08:00', status: 'Concluido' },
-        { cat: 'Proatividade', item: 'Imp. Financeiro: Givanildo', date: impressoras, time: '08:00', status: 'Concluido' },
-        { cat: 'Proatividade', item: 'Imp. Financeiro: Francisca', date: impressoras, time: '08:00', status: 'Concluido' },
-        { cat: 'Proatividade', item: 'Imp. Financeiro: Walter', date: impressoras, time: '08:00', status: 'Concluido' },
-        { cat: 'Proatividade', item: 'Imp. Financeiro: Estagiário', date: impressoras, time: '08:00', status: 'Concluido' },
+        { cat: 'Proatividade', item: 'Imp. Financeiro: Gilson', time: '08:00', status: 'Concluido' },
+        { cat: 'Proatividade', item: 'Imp. Financeiro: Givanildo', time: '08:00', status: 'Concluido' },
+        { cat: 'Proatividade', item: 'Imp. Financeiro: Francisca', time: '08:00', status: 'Concluido' },
+        { cat: 'Proatividade', item: 'Imp. Financeiro: Walter', time: '08:00', status: 'Concluido' },
+        { cat: 'Proatividade', item: 'Imp. Financeiro: Estagiário', time: '08:00', status: 'Concluido' },
         // Impressoras RH
-        { cat: 'Proatividade', item: 'Imp. RH: Paulo', date: impressoras, time: '08:00', status: 'Concluido' },
-        { cat: 'Proatividade', item: 'Imp. RH: Sofia', date: impressoras, time: '08:00', status: 'Concluido' },
-        { cat: 'Proatividade', item: 'Imp. RH: Larissa', date: impressoras, time: '08:00', status: 'Concluido' },
-        { cat: 'Proatividade', item: 'Imp. RH: Sterffany', date: impressoras, time: '08:00', status: 'Concluido' },
+        { cat: 'Proatividade', item: 'Imp. RH: Paulo', time: '08:00', status: 'Concluido' },
+        { cat: 'Proatividade', item: 'Imp. RH: Sofia', time: '08:00', status: 'Concluido' },
+        { cat: 'Proatividade', item: 'Imp. RH: Larissa', time: '08:00', status: 'Concluido' },
+        { cat: 'Proatividade', item: 'Imp. RH: Sterffany', time: '08:00', status: 'Concluido' },
         // Impressoras Pós
-        { cat: 'Proatividade', item: 'Imp. Pós: Dani', date: impressoras, time: '08:00', status: 'Concluido' },
-        { cat: 'Proatividade', item: 'Imp. Pós: Brenda', date: impressoras, time: '08:00', status: 'Concluido' },
-        { cat: 'Proatividade', item: 'Imp. Pós: Edmar', date: impressoras, time: '08:00', status: 'Concluido' },
-        { cat: 'Proatividade', item: 'Imp. Pós: Karla', date: impressoras, time: '08:00', status: 'Concluido' },
-        { cat: 'Proatividade', item: 'Imp. Pós: Estagiário', date: impressoras, time: '08:00', status: 'Concluido' },
+        { cat: 'Proatividade', item: 'Imp. Pós: Dani', time: '08:00', status: 'Concluido' },
+        { cat: 'Proatividade', item: 'Imp. Pós: Brenda', time: '08:00', status: 'Concluido' },
+        { cat: 'Proatividade', item: 'Imp. Pós: Edmar', time: '08:00', status: 'Concluido' },
+        { cat: 'Proatividade', item: 'Imp. Pós: Karla', time: '08:00', status: 'Concluido' },
+        { cat: 'Proatividade', item: 'Imp. Pós: Estagiário', time: '08:00', status: 'Concluido' },
         // Outros Proatividade
-        { cat: 'Proatividade', item: 'Verif. Impressoras ADM', date: impressoras, time: '08:00', status: 'Concluido' },
-        { cat: 'Proatividade', item: 'Verif. Impressoras Escolaridade', date: impressoras, time: '08:00', status: 'Concluido' },
-        { cat: 'Proatividade', item: 'Script bat para Windows', date: impressoras, time: '08:00', status: 'Em andamento' },
-        { cat: 'Proatividade', item: 'Teste componentes (Fonte 1 e 2)', date: impressoras, time: '08:00', status: 'Concluido' },
+        { cat: 'Proatividade', item: 'Verif. Impressoras ADM', time: '08:00', status: 'Concluido' },
+        { cat: 'Proatividade', item: 'Verif. Impressoras Escolaridade', time: '08:00', status: 'Concluido' },
+        { cat: 'Proatividade', item: 'Script bat para Windows', time: '08:00', status: 'Em andamento' },
+        { cat: 'Proatividade', item: 'Teste componentes (Fonte 1 e 2)', time: '08:00', status: 'Concluido' },
         { cat: 'Proatividade', item: 'Crimpagem do 1 cabo menor', time: '08:00', status: 'Concluido' },
-        { cat: 'Proatividade', item: 'Crimpagem do 2 cabo menor', time: '08:00', status: 'Concluido' },
+        { cat: 'Proatividade', item: 'Crimpagem do 2 cabo menor', time:'08:00', status: 'Concluido' },
         { cat: 'Proatividade', item: 'Crimpagem do 3 cabo menor', time: '08:00', status: 'Concluido' },
         { cat: 'Proatividade', item: 'Crimpagem do 4 cabo menor', time: '08:00', status: 'Concluido' },
         { cat: 'Proatividade', item: 'Crimpagem do 5 cabo menor', time: '08:00', status: 'Concluido' },
@@ -119,21 +108,27 @@
         { cat: 'Proatividade', item: 'Script Bat para Windows', time: '08:00', status: 'Em andamento' },
         { cat: 'Proatividade', item: 'Verificação de loop em todos os 3 racks disponíveis', time: '08:00', status: 'Concluido' },
         { cat: 'Proatividade', item: 'Implementação do VSCODE para o Almoxarifado', time: '08:00', status: 'Concluido' },
-        { cat: 'Proatividade', item: 'Implementação do GIT como ambiente de trabalho', time: '08:00', status: 'Concluido' },
+        { cat: 'Proatividade', item: 'Implementação do GIT como ambiente de trabalho(Almoxarifado)', time: '08:00', status: 'Em andamento' },
         { cat: 'Proatividade', item: 'Evento auditório 3', time: '08:00', status: 'Concluido' },
         { cat: 'Proatividade', item: 'Instalação de 2 impressoras em Cláudio', time: '08:00', status: 'Concluido' },
         { cat: 'Proatividade', item: 'Troca de Toner(Paulina)', time: '08:00', status: 'Concluido' },
+        { cat: 'Proatividade', item: 'Adição do Switch D-LINK (RACK 02)', time: '08:00', status: 'Concluido' },
+        { cat: 'Proatividade', item: 'Feita uma análise no RACK 02', time: '08:00', status: 'Concluido' },
+        { cat: 'Proatividade', item: 'Estudo do Rack 01 (Aruba Switch Core)', time: '08:00', status: 'Concluido' },
+        { cat: 'Proatividade', item: 'Estudo do Rack 01 (Aruba Switch RNP)', time: '08:00', status: 'Concluido' },
+        { cat: 'Proatividade', item: 'Estudo do Rack 01 (Fortinet: Switch PE-Conectado)', time: '08:00', status: 'Concluido' },
+        { cat: 'Proatividade', item: 'Estudo do Rack 04 (ADM)', time: '08:00', status: 'Concluido' },
 
         // CATEGORIA ORGANIZAÇÃO
-        { cat: 'Organização', item: '1.1 Arrumação bancada informática', date: informaticaOrganizar, time: '08:30', status: 'Concluido' },
-        { cat: 'Organização', item: '1.2 Organizar caixas/equipamentos', date: informaticaOrganizar, time: '08:00', status: 'Concluido' },
-        { cat: 'Organização', item: '1.3 Limpar a bancada', date: informaticaOrganizar, time: '08:00', status: 'Concluido' },
-        { cat: 'Organização', item: '1.4 Arrumar o armário', date: '-', time: '-', status: 'Pendente' },
-        { cat: 'Organização', item: '1.5 Arrumação bancada Gabriel', date: informaticaOrganizar, time: '08:00', status: 'Concluido' },
-        { cat: 'Organização', item: 'Organizar RACK 02', date: rack02, time: '08:00', status: 'Concluido' },
+        { cat: 'Organização', item: '1.1 Arrumação bancada informática', time: '08:30', status: 'Concluido' },
+        { cat: 'Organização', item: '1.2 Organizar caixas/equipamentos', time: '08:00', status: 'Concluido' },
+        { cat: 'Organização', item: '1.3 Limpar a bancada', time: '08:00', status: 'Concluido' },
+        { cat: 'Organização', item: '1.4 Arrumar o armário', time: '-', status: 'Pendente' },
+        { cat: 'Organização', item: '1.5 Arrumação bancada Gabriel', time: '08:00', status: 'Concluido' },
+        { cat: 'Organização', item: 'Organização do RACK 02', time: '08:00', status: 'Concluido' },
 
         // CATEGORIA COMUNICAÇÃO
-        { cat: 'Comunicação', item: 'Melhora da comunicação com equipe', date: comunicacao, time: '-', status: 'Concluido' },
+        { cat: 'Comunicação', item: 'Melhora da comunicação com equipe', time: '-', status: 'Concluido' },
     ];
 
     // --- 2. LÓGICA DE RENDERIZAÇÃO DA TABELA ---
@@ -160,7 +155,6 @@
             <tr>
                 <td><span class="badge bg-${catColor} badge-cat">${task.cat}</span></td>
                 <td>${task.item}</td>
-                <td>${task.date}</td>
                 <td>${task.time}</td>
                 <td><span class="badge ${badgeClass} p-2">${statusIcon} ${task.status}</span></td>
             </tr>
