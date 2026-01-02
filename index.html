@@ -16,19 +16,89 @@
         .status-pendente { background-color: #f8d7da; color: #842029; }
         .badge-cat { font-size: 0.85em; font-weight: 500; }
         .table-hover tbody tr:hover { background-color: #f1f1f1; }
+    
+.tech-obs-box {
+    background-color: #ffffff;
+    border-radius: 16px; /* Bordas mais arredondadas */
+    padding: 24px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08); /* Sombra suave e profunda */
+    border-left: 6px solid #6610f2; /* Roxo Indigo */
+    margin-top: 20px;
+    display: flex; /* Para alinhar ícone e texto */
+    align-items: flex-start;
+    gap: 20px;
+    transition: transform 0.3s ease;
+}
+
+.tech-obs-box:hover {
+    transform: translateY(-5px); /* Efeito de flutuar ao passar o mouse */
+}
+
+/* Círculo do Ícone */
+.tech-icon-circle {
+    min-width: 60px;
+    height: 60px;
+    background-color: #f3e5f5; /* Fundo roxo bem claro */
+    color: #6610f2; /* Ícone roxo */
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.8rem;
+}
+
+/* Títulos e Textos */
+.tech-title {
+    font-weight: 700;
+    color: #2c3e50;
+    font-size: 1.1rem;
+    margin-bottom: 8px;
+}
+
+.date-badge {
+    background-color: #e9ecef;
+    color: #495057;
+    padding: 5px 12px;
+    border-radius: 20px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    display: inline-block;
+    margin-bottom: 10px;
+}
     </style>
 </head>
 <body>
-
 <div class="container py-4">
-    <div class="row mb-4 align-items-center">
-        <div class="col-md-8">
-            <h2 class="header-title"><i class="fas fa-tasks text-primary me-2"></i>Painel de Controle de Tarefas</h2>
-            <p class="text-muted">Um relatório completo de atividades a partir do mês de Novembro a Dezembro</p>
-            <p style="color: 	#4B0082;">Obs: No final de Novembro até de Dezembro, foi realizado um estudo nos conteúdos de Infraestrutura de redes e comunicação de modo a identificar as causas que vem ocorrendo repentinamente na queda da Internet da FOP. Além disso foi analisado a estrutura dos Racks 01, 02 e 04 (Patch pannels e Switchs) para entender como a Internet se distribuí pela instituição e dessa forma aplicar os conhecimentos aprendidos de forma eficaz.</p>
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <div>
+            <h2 class="header-title mb-1">
+                <i class="fas fa-tasks text-primary me-2"></i>Painel de Controle de Tarefas
+            </h2>
+            <span class="date-badge"><i class="far fa-calendar-alt me-1"></i> Novembro - Dezembro</span>
         </div>
-        <div class="col-md-4 text-end">
-            <button class="btn btn-primary" onclick="window.print()"><i class="fas fa-print"></i> Imprimir Relatório</button>
+        
+        <button class="btn btn-primary shadow-sm" onclick="window.print()">
+            <i class="fas fa-print me-2"></i> Imprimir Relatório
+        </button>
+    </div>
+
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="tech-obs-box">
+                <div class="tech-icon-circle">
+                    <i class="fas fa-network-wired"></i>
+                </div>
+                
+                <div>
+                    <div class="tech-title">Análise de Infraestrutura & Redes</div>
+                    <p class="mb-0 text-secondary" style="line-height: 1.6; font-size: 0.95rem;">
+                        Durante o período, foi realizado um estudo aprofundado nos ativos de rede da FOP para identificar causas de instabilidade.
+                        A análise focou na <strong>topologia lógica e física</strong>, inspecionando a distribuição através dos 
+                        <span class="text-dark fw-bold">Racks 01, 02 e 04</span> (Patch Panels e Switchs). 
+                        Este diagnóstico permitiu identificar possiveis gargalos e aplicar conhecimentos teóricos na prática.
+                    </p>
+                </div>
+            </div>
         </div>
     </div>
 
